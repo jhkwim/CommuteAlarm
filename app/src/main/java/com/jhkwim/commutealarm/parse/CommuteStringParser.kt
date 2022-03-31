@@ -1,15 +1,18 @@
 package com.jhkwim.commutealarm.parse
 
-import com.jhkwim.commutealarm.data.OfficeHour
+import android.util.Log
+import com.jhkwim.commutealarm.data.WorkSchedule
 import com.jhkwim.commutealarm.utils.DateTimeUtils
+import java.time.LocalDateTime
 import java.util.*
 
-class CommuteStringParser(private val text: String) {
+class CommuteStringParser(private val date: LocalDateTime, private val text: String) {
 
     companion object {
-        private const val WORKING_DATE_PATTERN = "MM월dd일(E)"
+        private const val TAG= "CommuteStringParser"
+        private const val WORKING_DATE_PATTERN = "yyyy년MM월dd일(E)"
         private const val WORKING_TIME_PATTERN = "ahh:mm"
-        private const val QUITTING_TIME_PATTERN = "ahh:mm"
+        private const val QUITTING_TIME_PATTERN = "ah:mm"
     }
 
     fun parse(): CommuteStr {
@@ -25,21 +28,27 @@ class CommuteStringParser(private val text: String) {
     fun stringsToCommute(items: List<String>): CommuteStr {
         var name = ""
         var date = ""
-        val officeHour = OfficeHour.FULL
+        var workSchedule = WorkSchedule.WEEKDAY_WORK
         var time = ""
         var expected = ""
 
         items.forEach {
-            val keywords = it.split(":")
+            val keywords = it.split(": ")
 
-            if (keywords.size < 2) return@forEach
+            if (keywords.size < 2) throw Exception("Can't parse keywords : keywords size is ${keywords.size}")
 
-            when (keywords[0].trim()) {
-                CommuteKeyWord.NAME.keyword -> name = keywords[1].trim()
-                CommuteKeyWord.DATE.keyword -> date = keywords[1].trim()
-//                CommuteKeyWord.SCHEDULE.keyword -> officeHour =
-                CommuteKeyWord.WORKING_TIME.keyword -> time = keywords[1].trim()
-                CommuteKeyWord.EXPECTED_TIME.keyword -> expected = keywords[1].trim()
+            val keyword = CommuteKeyWord.getByKeyword(keywords[0].replace("\\s".toRegex(), ""))
+            val value = keywords[1].replace("\\s".toRegex(), "")
+
+            when (keyword) {
+                CommuteKeyWord.NAME -> name = value
+                CommuteKeyWord.DATE -> date = "${this.date.year}년$value"
+                CommuteKeyWord.SCHEDULE -> workSchedule = WorkSchedule.getBySchedule(value)
+                CommuteKeyWord.WORKING_TIME -> time = value
+                CommuteKeyWord.EXPECTED_TIME -> expected = value
+                else -> {
+                    Log.w(TAG, "unknown keyword : $keywords")
+                }
             }
         }
 
@@ -50,6 +59,6 @@ class CommuteStringParser(private val text: String) {
         val expectedTime = DateTimeUtils.stringToTime(QUITTING_TIME_PATTERN, expected, Locale.ENGLISH)
         val expectedDateTime = DateTimeUtils.dateTime(workingDate, expectedTime)
 
-        return CommuteStr(name, workingDateTime, officeHour, expectedDateTime)
+        return CommuteStr(name, workingDateTime, workSchedule, expectedDateTime)
     }
 }
