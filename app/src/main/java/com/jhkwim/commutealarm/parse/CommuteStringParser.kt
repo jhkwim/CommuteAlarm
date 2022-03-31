@@ -1,6 +1,8 @@
 package com.jhkwim.commutealarm.parse
 
 import android.util.Log
+import com.jhkwim.commutealarm.data.CommuteInfo
+import com.jhkwim.commutealarm.data.CommuteKeyWord
 import com.jhkwim.commutealarm.data.WorkSchedule
 import com.jhkwim.commutealarm.utils.DateTimeUtils
 import java.time.LocalDateTime
@@ -9,13 +11,13 @@ import java.util.*
 class CommuteStringParser(private val date: LocalDateTime, private val text: String) {
 
     companion object {
-        private const val TAG= "CommuteStringParser"
+        private const val TAG = "CommuteStringParser"
         private const val WORKING_DATE_PATTERN = "yyyy년MM월dd일(E)"
         private const val WORKING_TIME_PATTERN = "ahh:mm"
         private const val QUITTING_TIME_PATTERN = "ah:mm"
     }
 
-    fun parse(): CommuteStr {
+    fun parse(): CommuteInfo {
         val items = filterMainKeyword(text)
 
         return stringsToCommute(items)
@@ -25,7 +27,7 @@ class CommuteStringParser(private val date: LocalDateTime, private val text: Str
         it.isNotEmpty() && it.contains(":")
     }
 
-    fun stringsToCommute(items: List<String>): CommuteStr {
+    fun stringsToCommute(items: List<String>): CommuteInfo {
         var name = ""
         var date = ""
         var workSchedule = WorkSchedule.WEEKDAY_WORK
@@ -59,6 +61,6 @@ class CommuteStringParser(private val date: LocalDateTime, private val text: Str
         val expectedTime = DateTimeUtils.stringToTime(QUITTING_TIME_PATTERN, expected, Locale.ENGLISH)
         val expectedDateTime = DateTimeUtils.dateTime(workingDate, expectedTime)
 
-        return CommuteStr(name, workingDateTime, workSchedule, expectedDateTime)
+        return CommuteInfo(name, workingDateTime, workSchedule, expectedDateTime)
     }
 }

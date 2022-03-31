@@ -1,7 +1,7 @@
 package com.jhkwim.commutealarm
 
 import android.util.Log
-import com.jhkwim.commutealarm.parse.CommuteStr
+import com.jhkwim.commutealarm.data.CommuteInfo
 import com.jhkwim.commutealarm.parse.CommuteStringParser
 import com.jhkwim.commutealarm.utils.DateTimeUtils
 import io.kotest.core.spec.style.StringSpec
@@ -11,7 +11,7 @@ import io.mockk.mockkStatic
 import java.time.DayOfWeek
 import java.time.LocalDateTime
 
-class Test: StringSpec({
+class Test : StringSpec({
 
     beforeEach {
         mockkStatic(Log::class)
@@ -51,9 +51,9 @@ class Test: StringSpec({
                 "\n"
 
 
-        val commuteStr: CommuteStr = CommuteStringParser(LocalDateTime.now(), text).parse()
+        val commuteInfo: CommuteInfo = CommuteStringParser(LocalDateTime.now(), text).parse()
 
-        println(commuteStr)
+        println(commuteInfo)
     }
 
 })

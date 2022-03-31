@@ -1,9 +1,8 @@
-package com.jhkwim.commutealarm.parse
+package com.jhkwim.commutealarm.data
 
-import com.jhkwim.commutealarm.data.WorkSchedule
 import java.time.LocalDateTime
 
-data class CommuteStr(
+data class CommuteInfo(
     val name: String,
     val workingTime: LocalDateTime,
     var workSchedule: WorkSchedule,

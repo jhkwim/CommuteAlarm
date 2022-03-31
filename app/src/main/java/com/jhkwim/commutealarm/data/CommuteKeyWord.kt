@@ -1,4 +1,4 @@
-package com.jhkwim.commutealarm.parse
+package com.jhkwim.commutealarm.data
 
 enum class CommuteKeyWord(val keyword: String) {
     NAME("이름"),

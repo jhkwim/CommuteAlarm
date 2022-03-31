@@ -6,6 +6,7 @@ enum class WorkSchedule(val schedule: String) {
     ANNUAL_LEAVE_AFTERNOON("오후반차");
 
     companion object {
-        fun getBySchedule(schedule: String) = values().find { it.schedule == schedule } ?: WEEKDAY_WORK
+        fun getBySchedule(schedule: String) =
+            values().find { it.schedule == schedule } ?: WEEKDAY_WORK
     }
 }
