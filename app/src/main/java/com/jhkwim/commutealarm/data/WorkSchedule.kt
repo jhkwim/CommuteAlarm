@@ -7,6 +7,6 @@ enum class WorkSchedule(val schedule: String) {
 
     companion object {
         fun getBySchedule(schedule: String) =
-            values().find { it.schedule == schedule } ?: WEEKDAY_WORK
+            values().find { it.schedule == schedule.replace("\\s".toRegex(), "") } ?: WEEKDAY_WORK
     }
 }

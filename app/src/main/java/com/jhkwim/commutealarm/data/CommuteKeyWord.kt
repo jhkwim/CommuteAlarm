@@ -9,6 +9,6 @@ enum class CommuteKeyWord(val keyword: String) {
     UNKNOWN("알수없음");
 
     companion object {
-        fun getByKeyword(keyword: String) = values().find { it.keyword == keyword } ?: UNKNOWN
+        fun getByKeyword(keyword: String) = values().find { it.keyword == keyword.replace("\\s".toRegex(), "") } ?: UNKNOWN
     }
 }
