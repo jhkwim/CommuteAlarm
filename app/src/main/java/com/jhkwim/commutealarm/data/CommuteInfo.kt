@@ -4,8 +4,8 @@ import java.time.LocalDateTime
 
 data class CommuteInfo(
     val name: String,
-    val workingTime: LocalDateTime,
+    val workingDateTime: LocalDateTime,
     var workSchedule: WorkSchedule,
-    val expectedQuittingTime: LocalDateTime
+    var expectedQuittingTime: LocalDateTime? = null
 )
 
